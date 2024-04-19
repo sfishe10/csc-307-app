@@ -6,22 +6,30 @@ function MyApp() {
     const [characters, setCharacters] = useState([]);
 
     function removeOneCharacter(index) {
-        const updated = characters.filter((character, i) => {
-            return i !== index;
-        });
-        setCharacters(updated);
+      const person = characters[index];
+      const promise = fetch(`http://localhost:8000/users/${person.id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        }
+      });
+      const updated = characters.filter((i) => {
+          return i !== index;
+      });
+      setCharacters(updated);
+      return promise;
     }
     function updateList(person) {
         postUser(person)
           .then((response) => {
             if (response.status === 201) {
-              return response.json
+              return response.json()
             }
             else {
               throw new Error("Could not add user")
             }
           })
-          .then(() => setCharacters([...characters, person]))
+          .then((user) => setCharacters([...characters, user]))
           .catch((error) => {
             console.log(error);
           })

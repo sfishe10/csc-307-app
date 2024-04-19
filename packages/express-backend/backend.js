@@ -92,13 +92,18 @@ app.get("/users/:id", (req, res) => {
 });
 app.post("/users", (req, res) => {
     const userToAdd = req.body;
-    addUser(userToAdd);
-    res.status(201).send();
+    const added_user = addUser(userToAdd);
+    res.status(201).send(added_user);
 })
-app.delete("/users", (req, res) => {
+app.delete("/users/:id", (req, res) => {
     const userIdToDelete = req.params.id;
-    deleteUser(userIdToDelete);
-    res.send();
+    if (deleteUser(userIdToDelete)) {
+        res.status(204).send();
+    }
+    else {
+        res.status(404).send("Resource not found.");
+    }
+    
 })
 
 
